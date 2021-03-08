@@ -1,0 +1,47 @@
+﻿@model IEnumerable<OrdersSystem.Courier>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourierSurname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Shop)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourierName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourierSurname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Shop.ShopName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CourierId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CourierId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CourierId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
