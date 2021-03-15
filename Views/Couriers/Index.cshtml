@@ -25,23 +25,50 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourierName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourierSurname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Shop.ShopName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CourierId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CourierId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CourierId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourierSurname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Shop.ShopName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CourierId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CourierId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CourierId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div class="container">
+    <div id="chart1"></div>
+</div>
+
+@section scripts{
+    <script type "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.get('/api/Charts/Couriers', function (JsonData) {
+                data = google.visualization.arrayToDataTable(JsonData, false);
+                var option = {
+                    title: "Couriers by order quantity",
+                    width: 500,
+                    height: 400
+                };
+                chart = new google.visualization.PieChart(document.getElementById('chart1'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}
