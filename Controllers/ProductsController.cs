@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OrdersSystem;
+using ClosedXML.Excel;
+using System.IO;
+using ClosedXML.Utils;
+using System.Linq.Expressions;
 
 namespace OrdersSystem.Controllers
 {
@@ -155,5 +160,108 @@ namespace OrdersSystem.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(IFormFile fileExcel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (fileExcel != null)
+                {
+                    using (var stream = new FileStream(fileExcel.FileName, FileMode.Create))
+                    {
+                        await fileExcel.CopyToAsync(stream);
+                        using (XLWorkbook workBook = new XLWorkbook(stream, XLEventTracking.Disabled))
+                        {
+                            foreach (IXLWorksheet worksheet in workBook.Worksheets)
+                            {                    
+                                foreach (IXLRow row in worksheet.RowsUsed().Skip(1))
+                                {
+                                    try
+                                    {
+                                        Product newProduct = new Product();
+                                        newProduct.ProductName = row.Cell(1).Value.ToString();
+                                        newProduct.ProductPrice = double.Parse(row.Cell(2).Value.ToString());
+                                        newProduct.ProductRemainingQuantity = (int)double.Parse(row.Cell(3).Value.ToString());
+
+                                        Shop shop = new Shop();
+                                        //находим магазин, у каждого уникальное имя!
+                                        var s = (from sh in _context.Shops
+                                                 where sh.ShopName.Contains(row.Cell(4).Value.ToString())
+                                                 select sh).ToList();
+                                        if (s.Count > 0) //если такой магазин есть, добавляем его и прыгаем на 236 строку
+                                        {
+                                            shop = s[0];
+                                        }
+                                        else //если такого магазина нет, то надо добавить его
+                                        {
+                                            shop.ShopName = row.Cell(4).Value.ToString(); //присваиваем имя
+                                            //у каждого магазина есть уникальный адрес, поэтому сразу создадим его
+                                            Adress adress = new Adress();
+                                            //и улицу тоже
+                                            Street street = new Street();
+                                            //найдём улицу с таким же именем что написано, они уникальны))
+                                            var str = (from st in _context.Streets
+                                                       where st.StreetName.Contains(row.Cell(7).Value.ToString())
+                                                       select st).ToList();
+                                            //если такая улица есть
+                                            if (str.Count > 0) //запишем её в адрес, но всё равно нужен номер поэтому нам на 234 строку
+                                            {
+                                                street = str[0];
+                                            }
+                                            else //если улицы с таким именем нету, то надо создать улицу
+                                            {
+                                                //запишем её имя
+                                                street.StreetName = row.Cell(7).Value.ToString();
+                                                //создадим город
+                                                Town town = new Town();
+                                                //проверим существует ли указанный город
+                                                var twn = (from t in _context.Towns
+                                                           where t.TownName.Contains(row.Cell(8).Value.ToString())
+                                                           select t).ToList();
+                                                if (twn.Count > 0) //если он есть то запишем его и прыгнем на????
+                                                {
+                                                    town = twn[0];
+                                                }
+                                                else //если такого города нет то надо создать его и добавить в бд
+                                                {
+                                                    town.TownName = row.Cell(8).Value.ToString();
+                                                    town.TownPostCode= (int)double.Parse(row.Cell(9).Value.ToString());
+                                                    _context.Towns.Add(town);
+                                                }
+                                                //запишем город в лицу и добавим улицу
+                                                street.Town = town;
+                                                _context.Streets.Add(street);
+                                            }
+                                            //запишем в адрес данные и добавим его
+                                            adress.Street = street;
+                                            adress.AddressNotes = row.Cell(6).Value.ToString();
+                                            adress.AddressStreetNumber = (int)double.Parse(row.Cell(5).Value.ToString());
+                                            _context.Adresses.Add(adress);
+                                            //после того как сделали адрес, запишем его в магазин и добавим магазин в БД
+                                            shop.Address = adress;
+                                            _context.Shops.Add(shop);
+                                        }
+                                        //присвоим продукту магазин и добавим его
+                                        newProduct.Shop = shop;
+                                        _context.Products.Add(newProduct);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //logging самостійно :)
+                                        Town town = new Town();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
