@@ -262,6 +262,70 @@ namespace OrdersSystem.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        public ActionResult Export()
+        {
+            using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
+            {
+                var products = _context.Products.ToList();
 
+                var worksheet = workbook.Worksheets.Add();
+                //Name	Price	Quantity	Shop name	Street number	Notes	Street name	City name	Postal code
+
+                worksheet.Cell("A1").Value = "Name";
+                worksheet.Cell("B1").Value = "Price";
+                worksheet.Cell("C1").Value = "Quantity";
+                worksheet.Cell("D1").Value = "Shop name";
+                worksheet.Cell("E1").Value = "Street number";
+                worksheet.Cell("F1").Value = "Notes";
+                worksheet.Cell("G1").Value = "Street name";
+                worksheet.Cell("H1").Value = "City name";
+                worksheet.Cell("I1").Value = "Postal code";
+                worksheet.Row(1).Style.Font.Bold = true;
+
+                for (int i = 0; i < products.Count; i++)
+                {
+                    try
+                    {
+                        worksheet.Cell(i + 2, 1).Value = products[i].ProductName;
+                        worksheet.Cell(i + 2, 2).Value = products[i].ProductPrice;
+                        worksheet.Cell(i + 2, 3).Value = products[i].ProductRemainingQuantity;
+                        var shop = (from sh in _context.Shops
+                                    where sh.ShopId == products[i].ShopId
+                                    select sh).ToList();
+
+                        worksheet.Cell(i + 2, 4).Value = shop[0].ShopName;
+                        var address = (from ad in _context.Adresses
+                                       where ad.AddressId == shop[0].AddressId
+                                       select ad).ToList();
+                        worksheet.Cell(i + 2, 5).Value = address[0].AddressStreetNumber;
+                        worksheet.Cell(i + 2, 6).Value = address[0].AddressNotes;
+                        var street = (from st in _context.Streets
+                                      where st.StreetId == address[0].StreetId
+                                      select st).ToList();
+                        worksheet.Cell(i + 2, 7).Value = street[0].StreetName;
+                        var town = (from tw in _context.Towns
+                                    where tw.TownId == street[0].TownId
+                                    select tw).ToList();
+                        worksheet.Cell(i + 2, 8).Value = town[0].TownName;
+                        worksheet.Cell(i + 2, 9).Value = town[0].TownPostCode;
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Flush();
+
+                    return new FileContentResult(stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    {
+                        FileDownloadName = $"library_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+                    };
+                }
+            }
+        }
     }
 }
