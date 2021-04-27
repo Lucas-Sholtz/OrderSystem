@@ -24,7 +24,19 @@ namespace OrdersSystem.Controllers
             var orderSystemDatabaseContext = _context.ProductOrderPairs.Include(p => p.Order).Include(p => p.Product);
             return View(await orderSystemDatabaseContext.ToListAsync());
         }
+        public async Task<IActionResult> ByOrder(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Orders", "Index");
+            }
 
+            ViewBag.OrderId = id;
+
+            var pairsInOrder = _context.ProductOrderPairs.Where(p => p.OrderId == id).Include(p=>p.Order).Include(p=>p.Product);
+
+            return View(await pairsInOrder.ToListAsync());
+        }
         // GET: ProductOrderPairs/Details/5
         public async Task<IActionResult> Details(int? id)
         {

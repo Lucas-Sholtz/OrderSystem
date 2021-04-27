@@ -10,10 +10,11 @@ namespace OrdersSystem
 
         [Required(ErrorMessage = "This field can't be empty!")]
         [Display(Name = "Quantity")]
+        [Range(1, int.MaxValue, ErrorMessage = "Only positive number allowed")]
         public int ProductQuantity { get; set; }
 
         [Required(ErrorMessage = "This field can't be empty!")]
-        [Display(Name = "Product number")]
+        [Display(Name = "Product")]
         public int ProductId { get; set; }
 
         [Required(ErrorMessage = "This field can't be empty!")]

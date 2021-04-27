@@ -20,7 +20,7 @@ namespace OrdersSystem
         [Display(Name = "Surname")]
         public string CourierSurname { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
-        [Display(Name = "Shop number")]
+        [Display(Name = "Shop")]
         public int ShopId { get; set; }
 
         public virtual Shop Shop { get; set; }

@@ -24,20 +24,17 @@ namespace OrdersSystem.Controllers
             var orderSystemDatabaseContext = _context.Streets.Include(s => s.Town);
             return View(await orderSystemDatabaseContext.ToListAsync());
         }
-        public async Task<IActionResult> ByTown(int? id, string? name, int? postal)
+        public async Task<IActionResult> ByTown(int? id, string? name)
         {
             if (id == null)
                 return RedirectToAction("Towns", "Index");
-            //find streets from town
+
             ViewBag.TownId = id;
             ViewBag.TownName = name;
-            ViewBag.TownPostCode = postal;
 
             var streetsFromTown = _context.Streets.Where(b => b.TownId == id).Include(b => b.Town);
 
             return View(await streetsFromTown.ToListAsync());
-            //var orderSystemDatabaseContext = _context.Streets.Include(s => s.Town);
-            //return View(await orderSystemDatabaseContext.ToListAsync());
         }
 
         // GET: Streets/Details/5

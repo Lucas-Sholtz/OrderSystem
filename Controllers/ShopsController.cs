@@ -21,7 +21,7 @@ namespace OrdersSystem.Controllers
         // GET: Shops
         public async Task<IActionResult> Index()
         {
-            var orderSystemDatabaseContext = _context.Shops.Include(s => s.Address);
+            var orderSystemDatabaseContext = _context.Shops.Include(s => s.Address).Include(o => o.Address.Street).Include(o => o.Address.Street.Town); ;
             return View(await orderSystemDatabaseContext.ToListAsync());
         }
 
@@ -41,7 +41,7 @@ namespace OrdersSystem.Controllers
                 return NotFound();
             }
 
-            return View(shop);
+            return RedirectToAction("ByShop", "Products", new { id = shop.ShopId, name = shop.ShopName});
         }
 
         // GET: Shops/Create

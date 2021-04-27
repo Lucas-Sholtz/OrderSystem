@@ -17,7 +17,7 @@ namespace OrdersSystem
         [Display(Name = "Name")]
         public string StreetName { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
-        [Display(Name = "Town number")]
+        [Display(Name = "Town")]
         public int TownId { get; set; }
 
         public virtual Town Town { get; set; }

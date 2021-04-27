@@ -2,6 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
 
-</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>@User.Identity.Name</p>
+
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Logout" />
+    </form>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login">Login</a>
+    <a asp-controller="Account" asp-action="Register">Sign In</a>
+}

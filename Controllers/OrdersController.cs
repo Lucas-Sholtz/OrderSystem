@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,8 +21,34 @@ namespace OrdersSystem.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var orderSystemDatabaseContext = _context.Orders.Include(o => o.Address).Include(o => o.Client).Include(o => o.Courier);
+            var orderSystemDatabaseContext = _context.Orders.Include(o => o.Address).Include(o => o.Client).Include(o => o.Courier).Include(o=>o.Address.Street).Include(o=>o.Address.Street.Town);
             return View(await orderSystemDatabaseContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> ByCourier(int? id, string? name)
+        {
+            if (id == null)
+                return RedirectToAction("Couriers", "Index");
+
+            ViewBag.CourierId = id;
+            ViewBag.CourierFullName = name;
+
+            var ordersOfCourier = _context.Orders.Where(b => b.CourierId == id).Include(b => b.Courier).Include(b => b.Client).Include(b => b.Address);
+
+            return View(await ordersOfCourier.ToListAsync());
+        }
+
+        public async Task<IActionResult> ByClient(int? id, string? name)
+        {
+            if (id == null)
+                return RedirectToAction("Clients", "Index");
+
+            ViewBag.ClientId = id;
+            ViewBag.ClientFullName = name;
+
+            var ordersOfClient = _context.Orders.Where(b => b.ClientId == id).Include(b => b.Courier).Include(b => b.Client).Include(b => b.Address);
+
+            return View(await ordersOfClient.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -43,7 +69,7 @@ namespace OrdersSystem.Controllers
                 return NotFound();
             }
 
-            return View(order);
+            return RedirectToAction("ByOrder", "ProductOrderPairs", new { id = order.OrderId });
         }
 
         // GET: Orders/Create

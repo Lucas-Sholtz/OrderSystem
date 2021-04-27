@@ -9,7 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OrdersSystem.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OrdersSystem.Models;
 
 namespace OrdersSystem
 {
@@ -25,9 +27,15 @@ namespace OrdersSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<OrderSystemDatabaseContext>(options => options.UseSqlServer(connection));
+            string databaseConnection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<OrderSystemDatabaseContext>(options => options.UseSqlServer(databaseConnection));
             services.AddControllersWithViews();
+
+            string identityConnection = Configuration.GetConnectionString("IdentityConnection");
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(identityConnection));
+            services.AddControllersWithViews();
+
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<IdentityDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +55,8 @@ namespace OrdersSystem
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

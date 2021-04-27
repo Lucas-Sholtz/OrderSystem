@@ -41,7 +41,7 @@ namespace OrdersSystem.Controllers
                 return NotFound();
             }
 
-            return View(courier);
+            return RedirectToAction("ByCourier", "Orders", new { id = courier.CourierId, name = courier.CourierName + courier.CourierSurname });
         }
 
         // GET: Couriers/Create

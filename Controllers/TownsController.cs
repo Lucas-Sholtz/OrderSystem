@@ -39,7 +39,7 @@ namespace OrdersSystem.Controllers
                 return NotFound();
             }
 
-            return RedirectToAction("ByTown", "Streets", new { id = town.TownId, name = town.TownName, postal =  town.TownPostCode});
+            return RedirectToAction("ByTown", "Streets", new { id = town.TownId , name = town.TownName});
         }
 
         // GET: Towns/Create

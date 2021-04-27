@@ -12,19 +12,18 @@ namespace OrdersSystem
         {
             ProductOrderPairs = new HashSet<ProductOrderPair>();
         }
-
         public int OrderId { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
         [Display(Name = "Delivered")]
         public bool OrderStatus { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
-        [Display(Name = "Client number")]
+        [Display(Name = "Client")]
         public int ClientId { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
         [Display(Name = "Address number")]
         public int AddressId { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
-        [Display(Name = "Courier number")]
+        [Display(Name = "Courier")]
         public int CourierId { get; set; }
 
         public virtual Adress Address { get; set; }

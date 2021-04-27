@@ -18,6 +18,7 @@ namespace OrdersSystem
         public string TownName { get; set; }
         [Required(ErrorMessage = "This field can't be empty!")]
         [Display(Name = "Postal code")]
+        [Range(1, 99999, ErrorMessage = "Only 5 digit values allowed")]
         public int TownPostCode { get; set; }
         
 

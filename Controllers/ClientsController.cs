@@ -41,7 +41,7 @@ namespace OrdersSystem.Controllers
                 return NotFound();
             }
 
-            return View(client);
+            return RedirectToAction("ByClient", "Orders", new { id = client.ClientId, name = client.ClientName + client.ClientSurname });
         }
 
         // GET: Clients/Create
