@@ -22,13 +22,12 @@ namespace OrdersSystem.Controllers
         public JsonResult Couriers()
         {
             var couriers = _context.Couriers.Include(c => c.Orders).ToList();
-            //var table = new List<Tuple<string, int>>();
+
             List<object> list = new List<object>();
             list.Add(new [] { "Сourier", "Order count" });
             foreach(var c in couriers)
             {
                 list.Add(new object[] { c.CourierName, c.Orders.Count() });
-                //table.Add(new Tuple<string, int>(c.CourierName, c.Orders.Count));
             }
 
             return new JsonResult(list);
@@ -38,13 +37,12 @@ namespace OrdersSystem.Controllers
         public JsonResult Shops()
         {
             var shops = _context.Shops.Include(c => c.Products).ToList();
-            //var table = new List<Tuple<string, int>>();
+
             List<object> list = new List<object>();
             list.Add(new[] { "Shop", "Products count" });
             foreach (var c in shops)
             {
                 list.Add(new object[] { c.ShopName, c.Products.Count() });
-                //table.Add(new Tuple<string, int>(c.CourierName, c.Orders.Count));
             }
 
             return new JsonResult(list);

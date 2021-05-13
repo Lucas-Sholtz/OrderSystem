@@ -346,6 +346,7 @@ namespace OrdersSystem.Controllers
 
                                         Shop shop = new Shop();
                                         shop = ParseShop(row, shop);
+
                                         //присвоим продукту магазин и добавим его
                                         newProduct.Shop = shop;
                                         _context.Products.Add(newProduct);
@@ -367,7 +368,7 @@ namespace OrdersSystem.Controllers
             var s = (from sh in _context.Shops
                      where sh.ShopName.Contains(row.Cell(nameNumberDictionary[SHOP_NAME_STRING]).Value.ToString())
                      select sh).ToList();
-            if (s.Count > 0) //если такой магазин есть, добавляем его и прыгаем на 236 строку
+            if (s.Count > 0) //если такой магазин есть, добавляем его
             {
                 shop = s[0];
             }
@@ -419,7 +420,7 @@ namespace OrdersSystem.Controllers
                        where st.StreetName.Contains(row.Cell(nameNumberDictionary[STREET_NAME_STRING]).Value.ToString())
                        select st).ToList();
             //если такая улица есть
-            if (str.Count > 0) //запишем её в адрес, но всё равно нужен номер поэтому нам на 234 строку
+            if (str.Count > 0) //запишем её в адрес, но всё равно нужен номер
             {
                 street = str[0];
             }
@@ -462,7 +463,7 @@ namespace OrdersSystem.Controllers
             var twn = (from t in _context.Towns
                        where t.TownName.Contains(row.Cell(nameNumberDictionary[TOWN_STRING]).Value.ToString())
                        select t).ToList();
-            if (twn.Count > 0) //если он есть то запишем его и прыгнем на????
+            if (twn.Count > 0) //если он есть то запишем его
             {
                 town = twn[0];
             }
@@ -478,11 +479,30 @@ namespace OrdersSystem.Controllers
 
         private void ParseProduct(IXLRow row, Product newProduct)
         {
+            //check column formats
+            if (!CheckProductColumnsFormat(row))
+            {
+                throw new Exception("Product columns not in a correct format!");
+            }
+            //parse values
             newProduct.ProductName = row.Cell(nameNumberDictionary[NAME_STRING]).Value.ToString();
             newProduct.ProductPrice = double.Parse(row.Cell(nameNumberDictionary[PRICE_STRING]).Value.ToString());
             newProduct.ProductRemainingQuantity = (int)double.Parse(row.Cell(nameNumberDictionary[QUANTITY_STRING]).Value.ToString());
         }
-
+        private bool CheckProductColumnsFormat(IXLRow row)
+        {
+            try
+            {
+                string productName = (string)row.Cell(nameNumberDictionary[NAME_STRING]).Value;
+                double productPrice = double.Parse(row.Cell(nameNumberDictionary[PCODE_STRING]).Value.ToString());
+                int remainingQuantity = (int)double.Parse(row.Cell(nameNumberDictionary[QUANTITY_STRING]).Value.ToString());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public void AssignColumnNumbers(IXLRow firstRow)
         {
             foreach (var cell in firstRow.CellsUsed())
