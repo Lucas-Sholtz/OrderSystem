@@ -1,0 +1,41 @@
+﻿@model IEnumerable<OrdersSystem.FamilyCard>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FamilyCardBalance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FamilyCardBonusPercent)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FamilyCardBalance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FamilyCardBonusPercent)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FamilyCardId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FamilyCardId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FamilyCardId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

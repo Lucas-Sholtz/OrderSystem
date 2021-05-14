@@ -1,0 +1,57 @@
+﻿@model IEnumerable<OrdersSystem.ProductOrderPair>
+
+@{
+    ViewData["Title"] = "Products in order";
+}
+
+<h1>Products in order # @ViewBag.OrderId</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductPrice)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int orderPrice = 0;}
+        @foreach (var item in Model)
+        {
+            {orderPrice += (int)(item.Product.ProductPrice * item.ProductQuantity);}
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @((int)(item.Product.ProductPrice * item.ProductQuantity))
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.PairId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.PairId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.PairId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h2>Total order price: @orderPrice</h2>

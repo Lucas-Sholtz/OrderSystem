@@ -1,0 +1,41 @@
+﻿@model IEnumerable<OrdersSystem.Street>
+
+@{
+    ViewData["Title"] = "Streets from town";
+}
+<h1>Streets from town @ViewBag.TownName</h1>
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.TownId">Add new street</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StreetName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Town)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StreetName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Town.TownName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.StreetId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.StreetId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.StreetId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
