@@ -1,0 +1,119 @@
+﻿@model Query
+
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h1>Result</h1>
+<hr />
+    @if (Model.QueryId.Equals("1"))
+    {
+        <p style="font-size:20px">
+            <b>@Model.CourierName works in shop:</b> @Model.ShopName
+        </p>
+    }
+    else if (Model.QueryId.Equals("2"))
+    {
+        <p style="font-size:20px">
+            <b>The average price of products in shop where @Model.CourierName works is:</b> @decimal.Round(Model.AveragePrice, 2)
+        </p>
+    }
+    else if (Model.QueryId.Equals("3"))
+    {
+        <p style="font-size:20px">
+            <b>Shops from town @Model.TownName</b>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        ShopName
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ShopNames.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.ShopNames[i]
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model.QueryId.Equals("4"))
+    {
+        <p style="font-size:20px">
+            <b>Shop names where products price higher than @Model.ProductPrice</b>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        ShopName
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ShopNames.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.ShopNames[i]
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model.QueryId.Equals("5"))
+    {
+        <p style="font-size:20px">
+            <b>The price of order @Model.OrderId is:</b> @Model.OrderPrice.ToString()
+        </p>
+    }
+    else if (Model.QueryId.Equals("6"))
+    {
+        <p style="font-size:20px">
+            <b>Same product names in shops @Model.FirstShopName and @Model.SecondShopName</b>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        ProductName
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.SameProductNames.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.SameProductNames[i]
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+<table>
+    <tr>
+        <td>
+            <form method="get" asp-controller="Queries" asp-action="Index">
+                <input type="submit" class="btn btn-primary" value="Back to queries list" />
+            </form>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <form method="get" asp-controller="Home" asp-action="Index">
+                <input type="submit" class="btn btn-primary" value="Home" />
+            </form>
+        </td>
+    </tr>
+</table>
+</div>

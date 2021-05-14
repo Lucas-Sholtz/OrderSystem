@@ -6,15 +6,17 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace OrdersSystem
 {
-    public partial class OrderSystemDatabaseContext : DbContext
+    public partial class OrderSystemDatabaseContext_Old : DbContext
     {
-        public OrderSystemDatabaseContext()
+        public OrderSystemDatabaseContext_Old()
         {
+            this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-        public OrderSystemDatabaseContext(DbContextOptions<OrderSystemDatabaseContext> options)
+        public OrderSystemDatabaseContext_Old(DbContextOptions<OrderSystemDatabaseContext> options)
             : base(options)
         {
+            this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<Adress> Adresses { get; set; }
@@ -32,7 +34,6 @@ namespace OrdersSystem
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=LAPTOP-P4IHNG64; Database=OrderSystemDatabase; Trusted_Connection=True; ");
             }
         }
@@ -119,6 +120,8 @@ namespace OrdersSystem
 
             modelBuilder.Entity<Order>(entity =>
             {
+                entity.ToTable("Order");
+
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
                 entity.Property(e => e.AddressId).HasColumnName("AddressID");

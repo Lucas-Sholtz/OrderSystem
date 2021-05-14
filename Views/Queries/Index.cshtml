@@ -1,0 +1,138 @@
+﻿@model Query
+
+@{
+    ViewData["Title"] = "Queries";
+}
+
+<h1>Queries</h1>
+<hr />
+
+<p style="font-size:20px">
+    <b>Query1</b>
+</p>
+<p style="font-size:17px">
+    Find shop name where selected couries works
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Query1">
+            <div class="form-group">
+                <label class="control-label">Courier name</label>
+                <select asp-for="CourierName" asp-items="@ViewBag.CouriersNames" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Execute" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<p style="font-size:20px">
+    <b>Query2</b>
+</p>
+<p style="font-size:17px">
+    Calculate average price of products in shop where courier works
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Query2">
+            <div class="form-group">
+                <label class="control-label">Courier name</label>
+                <select asp-for="CourierName" asp-items="@ViewBag.CouriersNames" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Execute" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<p style="font-size:20px">
+    <b>Query3</b>
+</p>
+<p style="font-size:17px">
+    Find shop names from town
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Query3">
+            <div class="form-group">
+                <label class="control-label">Town</label>
+                <select asp-for="TownName" asp-items="@ViewBag.TownsNames" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Execute" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<p style="font-size:20px">
+    <b>Query4</b>
+</p>
+<p style="font-size:17px">
+    Find shop names where exist products with prices higher than
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Query4">
+            <div class="form-group">
+                <label asp-for="ProductPrice" class="control-label">Price</label>
+                <input maxlength="256" id="ProductPrice" asp-for="ProductPrice" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Execute" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<p style="font-size:20px">
+    <b>Query5</b>
+</p>
+<p style="font-size:17px">
+    Count price of order by Id
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Query5">
+            <div class="form-group">
+                <label class="control-label">Order id</label>
+                <select asp-for="OrderId" asp-items="@ViewBag.OrderIds" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Execute" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<p style="font-size:20px">
+    <b>Query6</b>
+</p>
+<p style="font-size:17px">
+    Select same product names in shops
+</p>
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Query6">
+            <div class="form-group">
+                <label class="control-label">Shop1</label>
+                <select asp-for="FirstShopName" asp-items="@ViewBag.ShopsNames" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Shop2</label>
+                <select asp-for="SecondShopName" asp-items="@ViewBag.ShopsNames" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Execute" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
